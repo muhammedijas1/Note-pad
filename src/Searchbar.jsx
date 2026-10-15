@@ -1,3 +1,6 @@
+// import { Usenote } from "./context/notecontext";
+// const {searcnote} = Usenote()
+
 function Searchbar({search,setsearch}){
     return(
         <div>

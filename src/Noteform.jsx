@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import ColorPicker from "./Colorpicker";
+import { Usenote } from "./context/notecontext";
 
 
-function Noteform({notes,setnotes,editingnote,seteditingnote}) {
+function Noteform({editingnote,seteditingnote}) {
+    const {notes,createnote,updatenote} = Usenote()
+    
     const [title,settitle]=useState("")
     const [content,setcontent]=useState("")
     const [color,setcolor]=useState("white")
@@ -22,7 +25,7 @@ function Noteform({notes,setnotes,editingnote,seteditingnote}) {
     seterror("");
   }, [editingnote]);
 
-    const handlesubmit = (e)=> {
+    const handlesubmit = async (e)=> {
       e.preventDefault()
     
 
@@ -56,32 +59,36 @@ function Noteform({notes,setnotes,editingnote,seteditingnote}) {
       return;
     }
 
-    if(editingnote){
-        const updatenotes = notes.map((note)=>
-            note.id === editingnote.id
-        ?{
-            ...note,
-            title: trimmedtitle,
-            content: trimmedcontent,
-            color:color,
-        }: note
-        )
-        setnotes(updatenotes);
-        seteditingnote(null);
-    }else{
-        const newnote ={
-            id: crypto.randomUUID(),
-            title:trimmedtitle,
-            content:trimmedcontent,
-            color:color,
-        }
-        setnotes([newnote,...notes])
+
+    try {
+    if (editingnote) {
+      await updatenote(editingnote.id, {
+        title: trimmedtitle,
+        content: trimmedcontent,
+        color: color,
+      });
+
+    seteditingnote(null);
+    } else {
+      await createnote({
+        title: trimmedtitle,
+        content: trimmedcontent,
+        color: color,
+      });
     }
-    seterror("");
+  
+
+    settitle("");
     setcontent("");
-    setcolor("white");
-    seterror("")
+    setcolor("yellow");
+    seterror("");
+    } catch (err) {
+    seterror("Failed to save note. Please try again.");
+    }
   }
+
+
+
     const cancelEdit = () => {
     seteditingnote(null);
     settitle("");
@@ -96,7 +103,7 @@ function Noteform({notes,setnotes,editingnote,seteditingnote}) {
             <h2 className="mb-4 text-xl font-semibold text-gray-800">
                 {editingnote ? "edit note":"create note"}
             </h2>
-        <div ClassName="mb-4">
+        <div className="mb-4">
          <label className="mb-1 block text-sm font-medium text-gray-700">
           Title
         </label>

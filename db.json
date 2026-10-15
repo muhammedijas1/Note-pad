@@ -1,0 +1,17 @@
+{
+  "notes": [
+    {
+      "title": "mmmmmmmm",
+      "content": "oooooooooooooooooooomm",
+      "color": "white",
+      "id": "zcVCJ-G4wgA"
+    },
+    {
+      "title": "ijas",
+      "content": "why",
+      "color": "blue",
+      "id": "s5fONk65p1Y"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
